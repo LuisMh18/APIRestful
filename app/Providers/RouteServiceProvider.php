@@ -63,10 +63,21 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
+    /*
+      funcion para las rutas de la api eliminamos el prefijo api para no tener
+      que hacer la peticion a pagina.com/api/ y ya sin el prefijo solo seria
+      pagina.com/ para ello solo eliminamos el prefijo prefix('api')
+
+    */
     protected function mapApiRoutes()
     {
-        Route::prefix('api')
+       /* Route::prefix('api')
              ->middleware('api')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/api.php'));*/
+
+         Route::middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }
