@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 
 use App\User;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class UserController extends Controller
         //con el metodo all accedemos a la lista de todos los usuarios disponibles
         $usuarios = User::all();
 
-        return response()->json(['data' => $usuarios], 200);
+        return $this->showAll($usuarios);
     }
 
     /**
@@ -46,7 +46,7 @@ class UserController extends Controller
         $campos['admin'] = User::USUARIO_REGULAR;//por defecto el usuario es regular porq eso lo cambia el admin
         $usuario = User::create($campos);
 
-        return response()->json(['data' => $usuario], 201);
+        return $this->showOne($usuario, 201);
     }
 
     /**
@@ -61,7 +61,7 @@ class UserController extends Controller
       //si en caso de que lo que se busca no exista para esp se usa el metodo findOrFail
       $usuario = User::findOrFail($id);
 
-      return response()->json(['data' => $usuario], 200);
+      return $this->showOne($usuario);
     }
 
 
@@ -101,7 +101,7 @@ class UserController extends Controller
        if($request->has('admin')){
          //si el usuario no es verificado mandamos un msj de error
          if(!$user->esVerificado()){
-           return response()->json(['error' => 'Unicamente los usuarios verificados pueden cambiar su valor de administrador', 'code' => 409], 409);
+           return $this->errorResponse('Unicamente los usuarios verificados pueden cambiar su valor de administrador', 409);
          }
 
          //en caso de que si sea un usuario verificado
@@ -110,12 +110,12 @@ class UserController extends Controller
 
        //el metodo isDirty valida si algunos e los valores originales ah cambiado su valor
        if(!$user->isDirty()){
-         return response()->json(['error' => 'Se debe de especificar un valor diferente para actualizar', 'code' => 422], 422);
+         return $this->errorResponse('Se debe de especificar un valor diferente para actualizar', 422);
        }
 
        $user->save();
 
-       return response()->json(['data' => $user], 200);
+       return $this->showOne($user);
 
     }
 
@@ -129,6 +129,6 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return response()->json(['data' => $user], 200);
+        return $this->showOne($user);
     }
 }
