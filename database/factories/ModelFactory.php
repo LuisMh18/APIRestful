@@ -1,5 +1,10 @@
 <?php
 
+use App\User;
+use App\Category;
+use App\Product;
+use App\Transaction;
+use App\Seller;
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -12,7 +17,7 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
@@ -20,5 +25,50 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+        'verified' => $verificado = $faker->randomElement([User::USUARIO_VERIFICADO, User::USUARIO_NO_VERIFICADO]),
+        'verification_token' => $verificado == User::USUARIO_VERIFICADO ? null :  User::generarVerificationToken(),
+        'admin' => $faker->randomElement([User::USUARIO_ADMINISTRADOR, User::USUARIO_REGULAR]),
+    ];
+});
+
+
+
+//Category
+$factory->define(Category::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->word,
+        'description' => $faker->paragraph(1),
+    ];
+});
+
+
+//Product
+$factory->define(Product::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->word,
+        'description' => $faker->paragraph(1),
+        'quantity' => $faker->numberBetween(1, 10),
+        'status' => $faker->randomElement([Product::PRODUCTO_DISPONIBLE, Product::PRODUCTO_NO_DISPONIBLE]),
+        'image' => $faker->randomElement(['1.jpg', '2.jpg', '3.jpg']),
+        'seller_id' => User::all()->random()->id,
+    ];
+});
+
+
+
+//Transaction
+$factory->define(Transaction::class, function (Faker\Generator $faker) {
+
+  //un vendedor es solo aquel usuario que ya posee productos, con el metodo has
+  //obtenemos todos los usuarios que ya tienen por lo menos un productos
+  $vendedor = Seller::has('products')->get()->random();
+
+  $comprador = User::all()->except($vendedor->id)->random();
+    return [
+        'quantity' => $faker->numberBetween(1, 3),
+        'buyer_id' => $comprador->id,
+        'product_id' => $vendedor->products->random()->id,
     ];
 });

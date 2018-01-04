@@ -7,11 +7,13 @@ use App\Transaction;
 
 use Illuminate\Database\Eloquent\Model;
 
-const PRODUCTO_DISPONIBLE = 'disponible';
-const PRODUCTO_NO_DISPONIBLE = 'no disponible';
 
 class Product extends Model
 {
+
+  const PRODUCTO_DISPONIBLE = 'disponible';
+  const PRODUCTO_NO_DISPONIBLE = 'no disponible';
+  
   protected $fillable = [
     'name',
     'description',
