@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Buyer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\Buyer;
+
 class BuyerController extends Controller
 {
     /**
@@ -12,31 +14,19 @@ class BuyerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(){
+        /*obtenemos los compradores, unicamente los que tengan compras(Transacciones)
+          esto lo hacemos por medio del metodo has() este recibe el nombre de una relación
+          que tenga ese modelo, en este caso transactions podemos verificar la relacion en el modelo Buyer
+          entonces lo que estamos haciendo es obtener todos kos usuarios que tengan transacciones activas
+          es decir los usuarios que son compradores*/
+
+          $compradores = Buyer::has('transactions')
+                         ->get();
+
+          return response()->json(['data' => $compradores], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -44,42 +34,13 @@ class BuyerController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show($id){
+
+      $comprador = Buyer::has('transactions')
+                     ->findOrFail($id);
+
+      return response()->json(['data' => $comprador], 200);
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

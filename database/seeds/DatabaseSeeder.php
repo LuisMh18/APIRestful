@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         DB::table('category_product')->truncate();
 
         //definimos la cantidad de registros que vamos a insertar a la bd
-        $cantidadUsuarios = 200;
+        $cantidadUsuarios = 1000;
         $cantidadCategorias = 30;
         $cantidadProductos = 1000;
         $cantidadTransacciones = 1000;
