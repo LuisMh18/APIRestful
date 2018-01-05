@@ -55,13 +55,18 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id){
-      //$usuario = User::find($id);
+
+    /*Usando inyección de Modelos,
+     *con esto ya no es necesario estar buscando por id, si no que simplemente pasandole el modelo como parametro
+     a la función este ya nos hace la busqueda correspondiente como si lo hicieramos con el findOrFail asi,  User::findOrFail($id);
+     */
+    public function show(User $user){
+      //$user = User::find($id);
 
       //si en caso de que lo que se busca no exista para esp se usa el metodo findOrFail
-      $usuario = User::findOrFail($id);
+      //$user = User::findOrFail($id);
 
-      return $this->showOne($usuario);
+      return $this->showOne($user);
     }
 
 
@@ -72,8 +77,8 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id){
-      $user = User::findOrFail($id);
+    public function update(Request $request, User $user){
+      //$user = User::findOrFail($id);
 
       $reglas = [
         'email' => 'email|unique:users,email,' . $user->id,//validamos que el email pueda ser el mismo del usuario actual, es decir el email debe de ser unico pero puede quedar con el mismo valor si es q no es modificado
@@ -125,8 +130,8 @@ class UserController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id){
-        $user = User::findOrFail($id);
+    public function destroy(User $user){
+        //$user = User::findOrFail($id);
         $user->delete();
 
         return $this->showOne($user);
