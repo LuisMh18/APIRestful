@@ -78,6 +78,11 @@ class Handler extends ExceptionHandler
             return $this->errorResponse('No se encontro la URL especificada', 404);
         }
 
+        //errores de metodos no permitidos
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return $this->errorResponse('El método especificado en la petición no es valido', 405);
+        }
+
         return parent::render($request, $exception);
     }
 
