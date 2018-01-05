@@ -27,6 +27,10 @@ class CreateUsersTable extends Migration
             //por defecto sera un usurio regular
             $table->string('admin')->default(User::USUARIO_REGULAR);
             $table->timestamps();
+            $table->softDeletes();/*Metodo que agregara una nueva fecha que es la fecha de eliminación del modelo en caso de que este haya sido eliminado*/
+            /* Nota: SoftDeleting sirve para no remover completamente la instancia(registro) si no
+               para ocultarla partiendo de la existencia de esa fecha, basicamente si la fecha existe laravel lo
+               oculta y si no existe lo muestra con normalidad*/
         });
     }
 

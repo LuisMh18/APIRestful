@@ -5,9 +5,15 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+/* Nota: SoftDeleting sirve para no remover completamente la instancia(registro) si no 
+   para ocultarla partiendo de la existencia de esa fecha, basicamente si la fecha existe laravel lo
+   oculta y si no existe lo muestra con normalidad*/
+
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     const USUARIO_VERIFICADO = '1';
     const USUARIO_NO_VERIFICADO = '0';
@@ -16,6 +22,7 @@ class User extends Authenticatable
     const USUARIO_REGULAR = 'false';
 
     protected $table = 'users';
+    protected $dates = ['deleted_at'];//le especificamos que el campo deleted_at sera tratado como una fecha
 
     /**
      * The attributes that are mass assignable.
