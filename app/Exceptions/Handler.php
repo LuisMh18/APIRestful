@@ -14,6 +14,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+use Illuminate\Database\QueryException;
+
 class Handler extends ExceptionHandler
 {
 
@@ -88,6 +90,15 @@ class Handler extends ExceptionHandler
         //errores para las diferentes excepciones de http
         if ($exception instanceof HttpException) {
             return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
+        }
+
+        //manejando la eliminación de recursos relacionados
+        if ($exception instanceof QueryException) {
+            $codigo = $exception->errorInfo[1];
+            if($codigo == 1451){
+              return $this->errorResponse('No se puede eliminar de forma permanente el recurso porque está relacionado con algún otro.', 409);
+            }
+
         }
 
         return parent::render($request, $exception);
