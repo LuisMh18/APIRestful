@@ -10,6 +10,7 @@ use App\Traits\ApiResponser;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -70,6 +71,11 @@ class Handler extends ExceptionHandler
         //errores de autorización
         if ($exception instanceof AuthorizationException) {
             return $this->errorResponse('No posee permisos para ejecutar esta acción', 403);
+        }
+
+        //errores cuando no se encuenra la url especificada
+        if ($exception instanceof NotFoundHttpException) {
+            return $this->errorResponse('No se encontro la URL especificada', 404);
         }
 
         return parent::render($request, $exception);
