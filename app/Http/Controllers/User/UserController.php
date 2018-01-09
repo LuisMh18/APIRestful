@@ -16,7 +16,7 @@ class UserController extends ApiController
      */
     public function index(){
         //con el metodo all accedemos a la lista de todos los usuarios disponibles
-        $usuarios = User::all();
+        $usuarios = User::all(); 
 
         return $this->showAll($usuarios);
     }
