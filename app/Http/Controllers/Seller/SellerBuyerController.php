@@ -8,10 +8,10 @@ use App\Http\Controllers\ApiController;
 
 class SellerBuyerController extends ApiController
 {
-    public function __construct()
+  /*  public function __construct()
     {
         parent::__construct();
-    }
+    }*/
     
     /**
      * Display a listing of the resource.
@@ -20,7 +20,9 @@ class SellerBuyerController extends ApiController
      */
     public function index(Seller $seller)
     {
-        $this->allowedAdminAction();
+
+        //obtener la lista de los compradores de un vendedor especifico
+        //$this->allowedAdminAction();
         
         $buyers = $seller->products()
             ->whereHas('transactions')
