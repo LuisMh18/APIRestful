@@ -96,13 +96,9 @@ class SellerProductController extends ApiController
 
         $this->validate($request, $rules);
 
-        //verificamos si el id del vendedor que recibimos en la peticion es el mismo id del vendedor asociado a ese producto
-        //en caso de que no sea el mismo tenemos que retornar un error
-        if($seller->id != $product->seller_id){
-            return $this->errorResponse('El vendedor especificado no es el vendedor real del producto', 402);
-        }
+        //llamamos al metodo para verificar al vendedor
+        $this->verificarVendedor($seller, $product);
 
-       // $this->verificarVendedor($seller, $product);
 
        //llenamos las primeras instancias de la actualización utilizando el metodo fill
         $product->fill($request->intersect([
@@ -144,6 +140,11 @@ class SellerProductController extends ApiController
      */
     public function destroy(Seller $seller, Product $product)
     {
+        /*eliminarr un producto de un vendedor especifico
+         *para esto tendremos que asegurarnos de que realmente el id del vendedor que se especifique en la url sea el id del vendedor de ese producto especifo basicamente lo que hicimos en la actualización
+        */
+
+        //llamamos al metodo para verificar al vendedor
         $this->verificarVendedor($seller, $product);
 
         Storage::delete($product->image);
@@ -153,8 +154,11 @@ class SellerProductController extends ApiController
         return $this->showOne($product);
     }
 
+    //metodo para verificar el vendedor
     protected function verificarVendedor(Seller $seller, Product $product)
     {
+        //verificamos si el id del vendedor que recibimos en la peticion es el mismo id del vendedor asociado a ese producto
+        //en caso de que no sea el mismo tenemos que retornar un error
         if ($seller->id != $product->seller_id) {
             throw new HttpException(422, 'El vendedor especificado no es el vendedor real del producto');
         }
