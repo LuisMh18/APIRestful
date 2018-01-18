@@ -82,6 +82,12 @@ class SellerProductController extends ApiController
      */
     public function update(Request $request, Seller $seller, Product $product)
     {
+        /*actualizar un producto de un vendedor especifico
+         *para esto nos tenemos que asegurar de que el vendedor que se especifico en la url sea verdaderamente el propietario de dicho producto y una 
+         *serie de restricciones adicionales, por ejemplo antes de actualizar el estado de u producto de no disponible a disponible este deba de tener 
+         *por lo menos una categoria  
+        */
+
         $rules = [
             'quantity' => 'integer|min:1',
             'status' => 'in: ' . Product::PRODUCTO_DISPONIBLE . ',' . Product::PRODUCTO_NO_DISPONIBLE,
@@ -90,27 +96,35 @@ class SellerProductController extends ApiController
 
         $this->validate($request, $rules);
 
-        $this->verificarVendedor($seller, $product);
+        //verificamos si el id del vendedor que recibimos en la peticion es el mismo id del vendedor asociado a ese producto
+        //en caso de que no sea el mismo tenemos que retornar un error
+        if($seller->id != $product->seller_id){
+            return $this->errorResponse('El vendedor especificado no es el vendedor real del producto', 402);
+        }
 
-        $product->fill($request->only([
+       // $this->verificarVendedor($seller, $product);
+
+       //llenamos las primeras instancias de la actualización utilizando el metodo fill
+        $product->fill($request->intersect([
             'name',
             'description',
             'quantity',
         ]));
 
         if ($request->has('status')) {
-            $product->status = $request->status;
+            $product->status = $request->status;//vamos a modificar el estado de manera incial, lo hacemos de manera inicial porq el estado q recibimos puede ser tanto disponible como no disponible 
 
+            //si el produto esta disponible y la cantidad de categorias de ese producto es igual a 0, entonces rtornamos un error
             if ($product->estaDisponible() && $product->categories()->count() == 0) {
-                return $this->errorResponse('Un producto activo debe tener al menos una categoría', 409);
+                return $this->errorResponse('Un producto activo debe tener al menos una categoría', 409); //esto es u conflicto y por eso utiizamos el codigo de estado 409
             }
         }
 
-        if ($request->hasFile('image')) {
+       /* if ($request->hasFile('image')) {
             Storage::delete($product->image);
 
             $product->image = $request->image->store('');
-        }
+        }*/
 
 
         if ($product->isClean()) {
