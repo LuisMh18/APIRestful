@@ -61,10 +61,16 @@ class ProductCategoryController extends ApiController
      */
     public function destroy(Product $product, Category $category)
     {
+        //eliminar una categoria de la lista de categorias de un producto
+
+        //comprobamos si en la lista de categorias de este producto no se logra encontrar una categoria con el id especificado es porq no existe, y mandamos un mensaje
         if (!$product->categories()->find($category->id)) {
             return $this->errorResponse('La categoría especificada no es una categoría de este producto', 404);
         }
 
+        /*en caso de que si exista la eliminamos utilizando el metodo detach
+        * Nota: investigar metodo detach
+        */
         $product->categories()->detach([$category->id]);
 
         return $this->showAll($product->categories);
