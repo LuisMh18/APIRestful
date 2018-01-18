@@ -9,7 +9,7 @@ use App\Http\Controllers\ApiController;
 
 class ProductCategoryController extends ApiController
 {
-    public function __construct()
+  /*  public function __construct()
     {
         $this->middleware('client.credentials')->only(['index']);
         $this->middleware('auth:api')->except(['index']);
@@ -17,7 +17,7 @@ class ProductCategoryController extends ApiController
         $this->middleware('scope:manage-products')->except('index');
         $this->middleware('can:add-category,product')->only('update');
         $this->middleware('can:delete-category,product')->only('destroy');
-    }
+    }*/
     
     /**
      * Display a listing of the resource.
@@ -26,6 +26,7 @@ class ProductCategoryController extends ApiController
      */
     public function index(Product $product)
     {
+        //obtener la lista de categorias de un producto especifico
         $categories = $product->categories;
 
         return $this->showAll($categories);
