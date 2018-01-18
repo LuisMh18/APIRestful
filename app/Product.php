@@ -27,6 +27,11 @@ class Product extends Model
     'seller_id',
   ];
 
+  //le solicitamos que oculte el atributo pivot, osea que lo exluda de los resiltados
+  protected $hidden = [
+    'pivot'
+  ];
+
   //funcion para determinar si un producto esta disponible
   public function estaDisponible(){
     return $this->status == Product::PRODUCTO_DISPONIBLE;

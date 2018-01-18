@@ -21,6 +21,11 @@ class Category extends Model
       'description'
     ];
 
+    //le solicitamos que oculte el atributo pivot, osea que lo exluda de los resiltados
+    protected $hidden = [
+      'pivot'
+    ];
+
     public function products(){
       return $this->belongsToMany(Product::class);
     }
