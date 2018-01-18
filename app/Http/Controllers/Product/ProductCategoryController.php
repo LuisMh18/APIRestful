@@ -41,7 +41,13 @@ class ProductCategoryController extends ApiController
      */
     public function update(Request $request, Product $product, Category $category)
     {
-        //sync, attach, syncWithoutDetaching
+        // Agregar nuevas categorias existentes a un producto  (update a un producto)
+        /*
+        * como esta es una relación de muchos a muchos debemos utilizar el metodo syncWithoutDetaching investigar los 3 metodos de abajo
+        * metodo -> sync - sustituye la lista anterior de registros en este caso son categorias por la lista de categorias agregadas
+        * metodo -> attach - Agrega el nuevo registro(categoria) pero si volvemos a mandar la misma categoria este la vuelve agregar
+        * metodo -> syncWithoutDetaching - Agrega la nueva categoria, y si intentamos agregar nuevamente la misma el efecto es nulo(no la agrega), se mantendra la que tendriamos originalmente sin realizar ningun tipo de acctualización
+        */
         $product->categories()->syncWithoutDetaching([$category->id]);
 
         return $this->showAll($product->categories);
