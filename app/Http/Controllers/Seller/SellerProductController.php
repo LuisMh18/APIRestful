@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SellerProductController extends ApiController
 {
-    public function __construct()
+  /*  public function __construct()
     {
         parent::__construct();
 
@@ -25,13 +25,13 @@ class SellerProductController extends ApiController
         $this->middleware('can:sale,seller')->only('store');
         $this->middleware('can:edit-product,seller')->only('update');
         $this->middleware('can:delete-product,seller')->only('destroy');
-    }
+    }*/
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Seller $seller)
+   /* public function index(Seller $seller)
     {
         if (request()->user()->tokenCan('read-general') || request()->user()->tokenCan('manage-products')) {
             $products = $seller->products;
@@ -41,7 +41,7 @@ class SellerProductController extends ApiController
 
         throw new AuthenticationException;
         
-    }
+    }*/
 
     /**
      * Store a newly created resource in storage.
@@ -49,8 +49,10 @@ class SellerProductController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+                                            //recivimos User $seller para que si el usuario(vendedor) va a publicar un producto por primera vez ,porq si no solamente esrarias reciviendo instancias de usuarios que tengan por lo menos un producto
     public function store(Request $request, User $seller)
     {
+        //crear producto para un usuario(vendedor)
         $rules = [
             'name' => 'required',
             'description' => 'required',
@@ -62,8 +64,8 @@ class SellerProductController extends ApiController
 
         $data = $request->all();
 
-        $data['status'] = Product::PRODUCTO_NO_DISPONIBLE;
-        $data['image'] = $request->image->store('');
+        $data['status'] = Product::PRODUCTO_NO_DISPONIBLE;//por defecto es estado de un producto es no disponible
+        $data['image'] = '1.jpg'; //$request->image->store('');
         $data['seller_id'] = $seller->id;
 
         $product = Product::create($data);
