@@ -8,10 +8,10 @@ use App\Http\Controllers\ApiController;
 
 class ProductTransactionController extends ApiController
 {
-    public function __construct()
+   /* public function __construct()
     {
         parent::__construct();
-    }
+    }*/
     
     /**
      * Display a listing of the resource.
@@ -20,7 +20,9 @@ class ProductTransactionController extends ApiController
      */
     public function index(Product $product)
     {
-        $this->allowedAdminAction();
+
+        //Obtener las transacciones de un producto especifico
+        //$this->allowedAdminAction();
         
         $transactions = $product->transactions;
 
