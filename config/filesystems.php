@@ -56,7 +56,7 @@ return [
         ],
 
         //creamos nuestro propio sistema de archivos para las imagenes
-        'public' => [
+        'images' => [
             'driver' => 'local',
             'root' => public_path('img'),
             'visibility' => 'public',

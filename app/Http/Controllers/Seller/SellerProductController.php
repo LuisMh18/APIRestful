@@ -64,8 +64,16 @@ class SellerProductController extends ApiController
 
         $data = $request->all();
 
+        /*Nota para la imagen: obtenemos la imagen de la petición,y laracel sabra automaticamente q es un archivo, al saber q es un archivo nos da acceso a una serie
+          de metodos del administrador de archvos de laravel qu nos permitiran gestionar en este caso la imagen, y uno de esos metodos se conoce
+          como store() el cual recibe como primer parametro la ubicacion donde vamos a poner en este caso la imagen, y como segundo paramtro opcional
+          el sistema de archivos a usar, como tenemos el sistema de archivos de images como el sistema de archivos por defecto entonces no necesitamos
+          especificarlo y la ruta se calcula relativamente a la que se establece en el sistema de archivos, entonces por defecto ya habiamos establecido 
+          que las imagenes se hiban a insertar en la carpeta img de la carpeta public asi q no necesitamos definir nngun parametro adicional para la ruta,
+          de este modo laravel se encargara de almacenar automaticamente la imagen y lo mas importante es q generara automaticamente un nombre aleatorio y
+          unico para esa imagen, asi q no nos tenemos que preocupar por establecerle un nombre a la imagen ps laravel lo ara por nosotros */
         $data['status'] = Product::PRODUCTO_NO_DISPONIBLE;//por defecto es estado de un producto es no disponible
-        $data['image'] = '1.jpg'; //$request->image->store('');
+        $data['image'] = $request->image->store('');
         $data['seller_id'] = $seller->id;
 
         $product = Product::create($data);
