@@ -155,6 +155,11 @@ class SellerProductController extends ApiController
         //llamamos al metodo para verificar al vendedor
         $this->verificarVendedor($seller, $product);
 
+        /*Para eliminar archivos se utiliza Storage que basicamente nos permite interactuar directamente con el sistema de archivos de laravel
+          una vez mas podemos especidficr el sistema de archivos sin embargo si no lo especificamos laravel utilizara el sistema de archivos
+          por defecto que en este caso es el de images, el metodo delete recibira unicamente el nombre o la ruta completa relativa al sistema de
+          aechivos donde se encuentra el archivo a eliminar, en este caso como sabemos que todas las rutas del sistema de archivos images son relativas
+          a la carpeta public/img  solo tendriamos que especficar el nombre del archivo ocomo tal*/
         Storage::delete($product->image);
 
         $product->delete();
