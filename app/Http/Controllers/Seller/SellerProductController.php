@@ -124,11 +124,11 @@ class SellerProductController extends ApiController
             }
         }
 
-       /* if ($request->hasFile('image')) {
-            Storage::delete($product->image);
-
+        if ($request->hasFile('image')) {
+            Storage::delete($product->image);//eliminamos la imagen anterior
+            //actualizamos la imagen
             $product->image = $request->image->store('');
-        }*/
+        }
 
 
         if ($product->isClean()) {
