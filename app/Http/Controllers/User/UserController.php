@@ -136,4 +136,18 @@ class UserController extends ApiController
 
         return $this->showOne($user);
     }
+
+    //ruta para la verificación de usuarios
+    public function verify($token)
+    {
+        //buscamos al usuario cuyo token de verificación sea igual al que recibimos
+        $user = User::where('verification_token', $token)->firstOrFail();
+        //ya que sabemos que existe el usuario procedemos a verificarlo
+        $user->verified = User::USUARIO_VERIFICADO;
+        $user->verification_token = null;//para evitar que el usuario pueda seguir utilizando este mismo token para intentar seguir validando su cuenta de manera inecesaria removemos el token de verificación actual
+
+        $user->save();
+
+        return $this->showMessage('La cuenta ha sido verificada');
+    }
 }

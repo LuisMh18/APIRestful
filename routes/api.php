@@ -63,3 +63,6 @@ Route::resource('sellers.transactions', 'Seller\SellerTransactionController', ['
  *users
 */
 Route::resource('users', 'User\UserController', ['except' => ['create', 'edit']]);
+//ruta para la verificación de usuarios
+//especificamos e nombre de la ruta y seguidamente el metodo
+Route::name('verify')->get('users/verify/{token}', 'User\UserController@verify');
