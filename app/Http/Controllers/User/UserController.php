@@ -137,7 +137,7 @@ class UserController extends ApiController
         return $this->showOne($user);
     }
 
-    //ruta para la verificación de usuarios
+    //ruta para la verificación de usuarios.
     public function verify($token)
     {
         //buscamos al usuario cuyo token de verificación sea igual al que recibimos
