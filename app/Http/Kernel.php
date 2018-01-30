@@ -25,8 +25,10 @@ class Kernel extends HttpKernel
      *
      * @var array
      */
+    /*Aqui el orden es muy importante*/
     protected $middlewareGroups = [
         'web' => [
+            'signature:X-Application-Name',
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
@@ -36,7 +38,9 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
+        
         'api' => [
+            'signature:X-Application-Name',
             'throttle:60,1',
             'bindings',
         ],
@@ -56,5 +60,6 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'signature' => \App\Http\Middleware\SignatureMiddleware::class,
     ];
 }
