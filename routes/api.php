@@ -66,3 +66,6 @@ Route::resource('users', 'User\UserController', ['except' => ['create', 'edit']]
 //ruta para la verificación de usuarios
 //especificamos e nombre de la ruta y seguidamente el metodo
 Route::name('verify')->get('users/verify/{token}', 'User\UserController@verify');
+
+//ruta para si se da el caso de que el usuario no reciva el correo pueda pedir que se le reenvie
+Route::name('resend')->get('users/{user}/resend', 'User\UserController@resend');
