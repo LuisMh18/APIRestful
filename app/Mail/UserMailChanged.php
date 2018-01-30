@@ -7,18 +7,22 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
+use App\User;
+
 class UserMailChanged extends Mailable
 {
     use Queueable, SerializesModels;
+
+    public $user;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-        //
+        $this->user = $user;
     }
 
     /**
@@ -28,6 +32,7 @@ class UserMailChanged extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        //return $this->view('view.name');
+        return $this->text('emails.confirm')->subject('Por favor confirma tu nuevo correo');
     }
 }
