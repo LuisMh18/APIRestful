@@ -23,11 +23,15 @@ class AppServiceProvider extends ServiceProvider
 
          /* Evento para user
           * Cada ves de que se cree un nuevo usuario se le va mandar un correo al usuario
+          * El metodo retry() recibe primero cuantas veces queremos que se reintente esa misma accion luegoo recibe la accion que se va a ejecutar
+          * y luego recibe cuantos milisegundos van a pasar entr un intento y otro, por ejemplo 100milisegundos, de este modo sabemos que si por alguna razón
+          * el envio de correos electronicos falla laravel automaticamente lo va intentar realizar 5 veces mas cada 100milisegundos y q ps si realmente 
+          * despues de esas 5 veces sique fallando ps reotrnara la correspondiente excepción
          */
         User::created(function($user) {
-            //retry(5, function() use ($user) {
+            retry(5, function() use ($user) {
                 Mail::to($user)->send(new UserCreated($user));
-            //}, 100);
+            }, 100);
         });
 
         /* 
@@ -37,9 +41,9 @@ class AppServiceProvider extends ServiceProvider
          */
         User::updated(function($user) {
             if ($user->isDirty('email')) {
-               // retry(5, function() use ($user) {
+                retry(5, function() use ($user) {
                     Mail::to($user)->send(new UserMailChanged($user));
-               // }, 100);
+                }, 100);
             }
         });
 

@@ -155,15 +155,23 @@ class UserController extends ApiController
 
     public function resend(User $user)
     {
+
+         /* 
+          * El metodo retry() recibe primero cuantas veces queremos que se reintente esa misma accion luegoo recibe la accion que se va a ejecutar
+          * y luego recibe cuantos milisegundos van a pasar entr un intento y otro, por ejemplo 100milisegundos, de este modo sabemos que si por alguna razón
+          * el envio de correos electronicos falla laravel automaticamente lo va intentar realizar 5 veces mas cada 100milisegundos y q ps si realmente 
+          * despues de esas 5 veces sique fallando ps reotrnara la correspondiente excepción
+         */
+
         //verificamos que la cuenta ya no sea de un usuario verificado
         if ($user->esVerificado()) {
             return $this->errorResponse('Este usuario ya ha sido verificado.', 409);
         }
 
         //en caso de que no haya sido verificado procedemos ah enviar nuevamente el correo
-        //retry(5, function() use ($user) {
+        retry(5, function() use ($user) {
             Mail::to($user)->send(new UserCreated($user));
-        //}, 100);
+        }, 100);
 
         return $this->showMessage('El correo de verificación se ha reenviado');
 
