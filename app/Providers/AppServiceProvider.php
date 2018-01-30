@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\User;
 use App\Product;
+use App\Mail\UserCreated;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,10 +20,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
+         /* Evento para user
+          * Cada ves de que se cree un nuevo usuario se le va mandar un correo al usuario
+         */
         User::created(function($user) {
-            retry(5, function() use ($user) {
+            //retry(5, function() use ($user) {
                 Mail::to($user)->send(new UserCreated($user));
-            }, 100);
+            //}, 100);
         });
 
         User::updated(function($user) {
@@ -49,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
                 $product->save();
             }
         });
+
     }
 
     /**
