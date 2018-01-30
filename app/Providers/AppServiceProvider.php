@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\User;
 use App\Product;
 use App\Mail\UserCreated;
+use App\Mail\UserMailChanged;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -29,11 +30,16 @@ class AppServiceProvider extends ServiceProvider
             //}, 100);
         });
 
+        /* 
+          * Se ejecuta cada vez que una instancia de usuario es actualizada
+          * solamnete se va a reenviar el correo electronic si su cuenta de correo original cambio
+          * metodo isDirty() nos permite saber si un campo en especifico ah cambiado su valor
+         */
         User::updated(function($user) {
             if ($user->isDirty('email')) {
-                retry(5, function() use ($user) {
+               // retry(5, function() use ($user) {
                     Mail::to($user)->send(new UserMailChanged($user));
-                }, 100);
+               // }, 100);
             }
         });
 
