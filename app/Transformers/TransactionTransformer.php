@@ -3,6 +3,7 @@
 namespace App\Transformers;
 
 use League\Fractal\TransformerAbstract;
+use App\Transaction;
 
 class TransactionTransformer extends TransformerAbstract
 {
@@ -11,7 +12,7 @@ class TransactionTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform()
+    public function transform(Transaction $transaction)
     {
         return [
             'identificador' => (int)$transaction->id,
