@@ -4,7 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-/* middleware que se encarga de agregar una cabecera con el nombre de la aplicación en cada una de las respuestas que damos
+/* Los middlewares nos permiten actuar directamente con la petición que recibimos o inclusive sobre la respuesta que vamos a retornar
+  *inclusive algunos middlewares tienen la posisbilidad de actuar sobre ambas partes, realizar cambios en la petición tanto como en la respuesta
+  *también hay middlewares para validaciones, por ejemplo para verificar cuando un usuario esta autenticado y para muchas otras cosas
+  *middleware que se encarga de agregar una cabecera con el nombre de la aplicación en cada una de las respuestas que damos
   *Existen diferentes formas de ejecutar un middleware y es si queremos que el middleware se ejecute antes de cuaquier otro o antes
   *inclusive de haberse generado una respuesta se cononce como before middleware, oh despues de haberse generado una respuesta y 
   *actuar sobre ella after middleware, en este caso como lo que
