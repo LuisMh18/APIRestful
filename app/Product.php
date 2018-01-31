@@ -8,10 +8,16 @@ use App\Transaction;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Transformers\ProductTransformer;
+
+
 class Product extends Model
 {
 
   use SoftDeletes;
+
+    //relacionamos el modelo con su respectiva transformación
+    public $transformer = ProductTransformer::class;
 
   protected $dates = ['deleted_at'];
 

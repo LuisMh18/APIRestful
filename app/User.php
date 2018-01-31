@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Transformers\UserTransformer;
+
 /* Nota: SoftDeleting sirve para no remover completamente la instancia(registro) si no 
    para ocultarla partiendo de la existencia de esa fecha, basicamente si la fecha existe laravel lo
    oculta y si no existe lo muestra con normalidad*/
@@ -20,6 +22,9 @@ class User extends Authenticatable
 
     const USUARIO_ADMINISTRADOR = 'true';
     const USUARIO_REGULAR = 'false';
+
+    //relacionamos el modelo con su respectiva transformación
+    public $transformer = UserTransformer::class;
 
     protected $table = 'users';
     protected $dates = ['deleted_at'];//le especificamos que el campo deleted_at sera tratado como una fecha

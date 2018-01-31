@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Transformers\CategoryTransformer;
+
 class Category extends Model
 {
 
   use SoftDeletes;
+
+  //relacionamos el modelo con su respectiva transformación
+  public $transformer = CategoryTransformer::class;
 
   protected $dates = ['deleted_at'];
 
