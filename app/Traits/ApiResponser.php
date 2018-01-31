@@ -3,6 +3,7 @@ namespace App\Traits;
 
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 trait ApiResponser{
   //metodo para los mensajes success
@@ -26,6 +27,7 @@ trait ApiResponser{
     $transformer = $collection->first()->transformer;
     $collection = $this->filterData($collection, $transformer);//filtrado
     $collection = $this->sortData($collection, $transformer);//ordenación
+    $collection = $this->paginate($collection);//paginación
     $collection = $this->transformData($collection, $transformer);
 
 		return $this->successResponse($collection, $code);
@@ -81,6 +83,53 @@ trait ApiResponser{
 			$collection = $collection->sortBy->{$attribute};
 		}
 		return $collection;
+  }
+  
+
+   /* metodo para la paginación el cual recibe una colección
+   * lo primero que aremos sera entonces resolver la pagina actual, para esto laravel nos proporciona una clase llamada LengthAwarePaginator
+   * que es basicamente un paginador que tiene en cuenta el tamao de la colección que nos permite resolver la pagina actual con el
+   * metodo resolveCurrentPage , a este punto ya conocemos la pagina en la que estamos, esta pagina sera entonces de gran utilidad para saver cual
+   * segmentode la colección vamos a mostrar, le valor predifinido a la cantidad de elementos por pagina, y lo que aremos a continuación sera dividir 
+   * la colección completa en diferentes secciónes dependiendo del tamao de la pagina esto lo aremos por medio del metodo slice que es propio de 
+   * las colecciones, slice recibe desde que punto hasta que punto vamos a dividir nuestra colección y esto dependera entonces de la pagina actual 
+   * en la que nos encontramos, slice nos recibe entonces como primer parametro el primer elemento el cual dependera del numero de pagina en el que nos 
+   * encontramos multiplicado por los elementos por pagina, ahora si estamos en la primer pagina entonces el valor deberia de seer cero, entonces a la 
+   * pagina tendremos que restarle el valor de 1 y eso lo multiplicamos por la cantidad de elementos por pagina yluego le enviamos la cantidad de elementos
+   * que requerimos y obtenemos la coleción, ya que tenemos eso creamos la instancia del paginador como tal, el cual recibe los resultados devidamente
+   * divididos segun la pagina y la cantidad, el tamao real de la colección eso lo hacemos por medio del metodo count(), los elementos ppor pagina y una
+   * serie de opciones las cuales van en un array, de todas las opciones posibles la unica que realmente nos interesa es la de path que es basicamente la ruta
+   * que se utilizara para determinar el recurso actual y porsupuesto la pagina en la que nos encontramos en ese momento, tambien nos permite indicar cual 
+   * podria ser la siguiente y cual podria ser la anterior pagina, echo esto ya solo nos queda retornar la colección paginada, es muy importante tener en
+   * cuenta que la generación de la ruta de la paginación automaticamente elimina los demas parametros de url que pueda haber alli, es decir si enviamos el
+   * numero de pagina y enviamos adicionalmente por ejemplo que queremos ordenar los elementos dependiendo de un atributo, esta ultima parte de ordenacion 
+   * de elementos se eliminara lo cual no queremos, entonces para ello simplemente vammos a pedirle al paginador o aos resultados paginados que agreguen
+   * la lista de todos los parametros que podamos tener alli
+   */
+  protected function paginate(Collection $collection)
+	{
+		/*$rules = [
+			'per_page' => 'integer|min:2|max:50'
+    ];*/
+
+		//Validator::validate(request()->all(), $rules);
+
+		$page = LengthAwarePaginator::resolveCurrentPage();
+
+		$perPage = 15; //valor predifinido a la cantidad de elementos por pagina
+		if (request()->has('per_page')) {
+			$perPage = (int) request()->per_page;
+		}
+
+		$results = $collection->slice(($page - 1) * $perPage, $perPage)->values();
+
+		$paginated = new LengthAwarePaginator($results, $collection->count(), $perPage, $page, [
+			'path' => LengthAwarePaginator::resolveCurrentPath(),
+		]);
+
+		$paginated->appends(request()->all());
+
+		return $paginated;
 	}
 
   /* metodo para las transformaciones
