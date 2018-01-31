@@ -24,7 +24,7 @@ trait ApiResponser{
 		}
 
     $transformer = $collection->first()->transformer;
-
+    $collection = $this->filterData($collection, $transformer);//filtrado
     $collection = $this->sortData($collection, $transformer);//ordenación
     $collection = $this->transformData($collection, $transformer);
 
@@ -45,7 +45,24 @@ trait ApiResponser{
   }
 
 
+  /* metodo para filtrar por multiples atributos
+   * recibe la colección de datos  y la transformación para poder identificar el atributo por el cual se va hacer el filtrado
+   * entonces obteneos la lista de todos los attributos que recibimos como parametro por medio de la url y hacemos un foreach
+   * para recorrer una a una verificar si ese parametro es un atributo original del modelo que adicionalmente tenga un valor y 
+   * en caso de que ambas cosas sean ciertas realizar el filtrado utilizando el metodo where
+   */
+  protected function filterData(Collection $collection, $transformer)
+	{
+		foreach (request()->query() as $query => $value) {
+			$attribute = $transformer::originalAttribute($query);
 
+			if (isset($attribute, $value)) {
+				$collection = $collection->where($attribute, $value);
+			}
+		}
+
+		return $collection;
+	}
 
 
   /* metodo para la ordenación de resultados segun el cliente lo desee ya se por nombre, correo, etc
