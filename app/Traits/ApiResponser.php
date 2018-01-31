@@ -3,6 +3,7 @@ namespace App\Traits;
 
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 trait ApiResponser{
@@ -108,15 +109,18 @@ trait ApiResponser{
    */
   protected function paginate(Collection $collection)
 	{
-		/*$rules = [
-			'per_page' => 'integer|min:2|max:50'
-    ];*/
 
-		//Validator::validate(request()->all(), $rules);
+    /*Reglas para permitirle al usuario definir el numero de la paginación, como minimo seran 2 y como maximo 50 */
+		$rules = [
+			'per_page' => 'integer|min:2|max:50'
+    ];
+
+		Validator::validate(request()->all(), $rules);//validamos
 
 		$page = LengthAwarePaginator::resolveCurrentPage();
 
-		$perPage = 15; //valor predifinido a la cantidad de elementos por pagina
+    $perPage = 15; //valor predifinido a la cantidad de elementos por pagina
+    //si rcibimos el parametro per_page sustituimos el valor de la cantidad de elementos de pagina por defecto por el recibido
 		if (request()->has('per_page')) {
 			$perPage = (int) request()->per_page;
 		}
