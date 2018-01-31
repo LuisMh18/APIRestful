@@ -12,7 +12,7 @@ class UserTransformer extends TransformerAbstract
      *
      * @return array
      */
-    public function transform()
+    public function transform(User $user)
     {
         return [
             'identificador' => (int)$user->id,
