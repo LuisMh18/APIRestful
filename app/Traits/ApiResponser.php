@@ -23,7 +23,8 @@ trait ApiResponser{
 			return $this->successResponse(['data' => $collection], $code);
 		}
 
-		$transformer = $collection->first()->transformer;
+    $transformer = $collection->first()->transformer;
+    $collection = $this->sortData($collection, $transformer);//ordenación
     $collection = $this->transformData($collection, $transformer);
 
 		return $this->successResponse($collection, $code);
@@ -41,6 +42,25 @@ trait ApiResponser{
   public function showMessage($message, $code = 200){
     return $this->successResponse(['data' => $message], $code);
   }
+
+
+  /* metodo para la ordenación de resultados segun el cliente lo desee ya se por nombre, correo, etc
+   * recibe la colección de datos
+   * la ordenación se ordenara unicamente si recibimos un prametro en la url llamado sort_by, asi que primero
+   * verificamos si viene este atributo, si existe entonces obtenemos su valor para ordenarlo, por suerte como estaos haciendo uso de las
+   * colecciones de laravel tenemos aceso a multiples metodos lo cual incluye un metodo para ordenar la colección como tal que es el
+   * metodo sortBy el cual recibe el atributo q utilizaremos para ordenar, entonces obtenemos el atributo mandado que tiene que ser el 
+   * atributo como esta en la transformación y llamamos al metodo originalAttribute para comparar con el atributo original de la bd
+   */
+  protected function sortData(Collection $collection, $transformer)
+	{
+		if (request()->has('sort_by')) {
+			$attribute = $transformer::originalAttribute(request()->sort_by);
+
+			$collection = $collection->sortBy->{$attribute};
+		}
+		return $collection;
+	}
 
   /* metodo para las transformaciones
     *recice dos cosas, el primero es la información a transformar y la segunda es la instancia o la clase que se utiizara
