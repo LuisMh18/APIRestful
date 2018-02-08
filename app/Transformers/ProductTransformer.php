@@ -25,6 +25,38 @@ class ProductTransformer extends TransformerAbstract
             'fechaCreacion' => (string)$product->created_at,
             'fechaActualizacion' => (string)$product->updated_at,
             'fechaEliminacion' => isset($product->deleted_at) ? (string) $product->deleted_at : null,
+
+            /* HATEOAS ------------------
+             * son basicamente una manera de mejorar la navegación y la información para la apirestful, estan 
+             * especiamente diseados para las maquinas que estan consumiendo apirestful,por medio de hateoas
+             * podemos generrar enlaces entre diferentes recursos de la apirestful, por ejemplo un enlace 
+             * hacia la lista de categorias en las que ese comprador a reaizado alguna compra, etc.
+             * en porcas palabras es una especie de navegación en donde puedes acceder a diferentes partes de 
+             * apirestful por supuesto relacionandolo como tal al recurso que se esta utilizando o consumiendo
+             * en ese momento.
+             */
+            'links' => [
+                [
+                    'rel' => 'self',
+                    'href' => route('products.show', $product->id),
+                ],
+                [
+                    'rel' => 'product.buyers',
+                    'href' => route('products.buyers.index', $product->id),
+                ],
+                [
+                    'rel' => 'product.categories',
+                    'href' => route('products.categories.index', $product->id),
+                ],
+                [
+                    'rel' => 'product.transactions',
+                    'href' => route('products.transactions.index', $product->id),
+                ],
+                [
+                    'rel' => 'seller',
+                    'href' => route('sellers.show', $product->seller_id),
+                ],
+            ],
         ];
     }
 

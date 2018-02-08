@@ -22,6 +22,41 @@ class BuyerTransformer extends TransformerAbstract
             'fechaCreacion' => (string)$buyer->created_at,
             'fechaActualizacion' => (string)$buyer->updated_at,
             'fechaEliminacion' => isset($buyer->deleted_at) ? (string) $buyer->deleted_at : null,
+            /* HATEOAS ------------------
+             * son basicamente una manera de mejorar la navegación y la información para la apirestful, estan 
+             * especiamente diseados para las maquinas que estan consumiendo apirestful,por medio de hateoas
+             * podemos generrar enlaces entre diferentes recursos de la apirestful, por ejemplo un enlace 
+             * hacia la lista de categorias en las que ese comprador a reaizado alguna compra, etc.
+             * en porcas palabras es una especie de navegación en donde puedes acceder a diferentes partes de 
+             * apirestful por supuesto relacionandolo como tal al recurso que se esta utilizando o consumiendo
+             * en ese momento.
+             */
+            'links' => [
+                [
+                    'rel' => 'self',
+                    'href' => route('buyers.show', $buyer->id),
+                ],
+                [
+                    'rel' => 'buyer.categories',
+                    'href' => route('buyers.categories.index', $buyer->id),
+                ],
+                [
+                    'rel' => 'buyer.products',
+                    'href' => route('buyers.products.index', $buyer->id),
+                ],
+                [
+                    'rel' => 'buyer.sellers',
+                    'href' => route('buyers.sellers.index', $buyer->id),
+                ],
+                [
+                    'rel' => 'buyer.transactions',
+                    'href' => route('buyers.transactions.index', $buyer->id),
+                ],
+                [
+                    'rel' => 'user',
+                    'href' => route('users.show', $buyer->id),
+                ],
+            ],
         ];
     }
 

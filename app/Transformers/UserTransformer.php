@@ -23,6 +23,22 @@ class UserTransformer extends TransformerAbstract
             'fechaCreacion' => (string)$user->created_at,
             'fechaActualizacion' => (string)$user->updated_at,
             'fechaEliminacion' => isset($user->deleted_at) ? (string) $user->deleted_at : null,
+
+            /* HATEOAS ------------------
+             * son basicamente una manera de mejorar la navegación y la información para la apirestful, estan 
+             * especiamente diseados para las maquinas que estan consumiendo apirestful,por medio de hateoas
+             * podemos generrar enlaces entre diferentes recursos de la apirestful, por ejemplo un enlace 
+             * hacia la lista de categorias en las que ese comprador a reaizado alguna compra, etc.
+             * en porcas palabras es una especie de navegación en donde puedes acceder a diferentes partes de 
+             * apirestful por supuesto relacionandolo como tal al recurso que se esta utilizando o consumiendo
+             * en ese momento.
+             */
+            'links' => [
+                [
+                    'rel' => 'self',
+                    'href' => route('users.show', $user->id),
+                ],
+            ],
         ];
     }
 
