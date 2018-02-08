@@ -30,6 +30,7 @@ trait ApiResponser{
     $collection = $this->sortData($collection, $transformer);//ordenación
     $collection = $this->paginate($collection);//paginación
     $collection = $this->transformData($collection, $transformer);
+    //$collection = $this->cacheResponse($collection);
 
 		return $this->successResponse($collection, $code);
 	}
@@ -145,7 +146,28 @@ trait ApiResponser{
 		$transformation = fractal($data, new $transformer); //construimos las transformación
 
 		return $transformation->toArray();//convertimos la transformación en un array
-	}
+  }
+  
+  /* recibimos la información
+    *el cahe sirve para mantener las respuestas durante un deterinado tiempo, por ejemplo si eliminamos un usuario y luego retornamos todos los usuario
+    *ese usuario eliminado seguira apareciendo en la respuesta hasta q no pase el tiempo determinado de cache en este caso estamos poniendo un tiempo de
+    *30s y bueno de este modo reducimos la carga de la base de datos
+   */
+ /* protected function cacheResponse($data)
+	{
+		$url = request()->url();
+		$queryParams = request()->query();
+
+		ksort($queryParams);
+
+		$queryString = http_build_query($queryParams);
+
+		$fullUrl = "{$url}?{$queryString}";
+
+		return Cache::remember($fullUrl, 30/60, function() use($data) {
+			return $data;
+		});
+  }*/
 
 }
 
