@@ -18,7 +18,7 @@ class CategoryController extends ApiController
        vamos a proteger las rutas mas basicas de nuestro sistema, en este caso entonces cualquier usuario, cliente registrado en el sistema deberia poder ver la lista de 
        productos, la lista de categorias, registrar un nuevo usuario, solicitar reenviar un correo electronico y similar.*/
        $this->middleware('client.credentials')->only(['index', 'show']);
-       // $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware('auth:api')->except(['index', 'show']);
         $this->middleware('transform.input:' . CategoryTransformer::class)->only(['store', 'update']);
     }
     /**
