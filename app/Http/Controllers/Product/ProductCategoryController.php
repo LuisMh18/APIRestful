@@ -9,15 +9,15 @@ use App\Http\Controllers\ApiController;
 
 class ProductCategoryController extends ApiController
 {
-  /*  public function __construct()
+    public function __construct()
     {
         $this->middleware('client.credentials')->only(['index']);
-        $this->middleware('auth:api')->except(['index']);
+       // $this->middleware('auth:api')->except(['index']);
 
-        $this->middleware('scope:manage-products')->except('index');
-        $this->middleware('can:add-category,product')->only('update');
-        $this->middleware('can:delete-category,product')->only('destroy');
-    }*/
+      //  $this->middleware('scope:manage-products')->except('index');
+      //  $this->middleware('can:add-category,product')->only('update');
+       // $this->middleware('can:delete-category,product')->only('destroy');
+    }
     
     /**
      * Display a listing of the resource.
