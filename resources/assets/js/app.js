@@ -16,6 +16,9 @@ window.Vue = require('vue');
  */
 
 //Vue.component('example', require('./components/Example.vue'));
+Vue.component(
+	'passport-personal-access-tokens',//nombre del componente
+	require('./components/passport/PersonalAccessTokens.vue')); //ruta del componente
 
 const app = new Vue({
     el: '#app'
