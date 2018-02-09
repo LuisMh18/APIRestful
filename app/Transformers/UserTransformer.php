@@ -72,7 +72,7 @@ class UserTransformer extends TransformerAbstract
             'id' => 'identificador',
             'name' => 'nombre',
             'email' => 'correo',
-            'password' => 'contraseña',
+            //'password' => 'contraseña',
             'verified' => 'esVerificado',
             'admin' => 'esAdministrador',
             'created_at' => 'fechaCreacion',

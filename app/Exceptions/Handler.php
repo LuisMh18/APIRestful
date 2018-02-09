@@ -101,6 +101,10 @@ class Handler extends ExceptionHandler
 
         }
 
+        if ($exception instanceof TokenMismatchException) {
+            return redirect()->back()->withInput($request->input());
+        }
+
         //manejando excepciones inesperadas
         if(config('app.debug')){
           return parent::render($request, $exception);
@@ -119,9 +123,10 @@ class Handler extends ExceptionHandler
      */
     protected function unauthenticated($request, AuthenticationException $exception)
     {
-
-        return $this->errorResponse('No autenticado.', 401);
-
+        if ($this->isFrontend($request)) {
+            return redirect()->guest('login');
+        }
+        return $this->errorResponse('No autenticado.', 401);        
     }
 
     //funcion para retornar los errores de validacion de laravel en formato json
@@ -134,11 +139,21 @@ class Handler extends ExceptionHandler
      */
     protected function convertValidationExceptionToResponse(ValidationException $e, $request)
     {
-
         $errors = $e->validator->errors()->getMessages();
 
-            return $this->errorResponse($errors, 422);
+        if ($this->isFrontend($request)) {
+            return $request->ajax() ? response()->json($errors, 422) : redirect()
+                ->back()
+                ->withInput($request->input())
+                ->withErrors($errors);
+        }
 
+        return $this->errorResponse($errors, 422);
+    }
+
+    private function isFrontend($request)
+    {
+        return $request->acceptsHtml() && collect($request->route()->middleware())->contains('web');
     }
 
 
